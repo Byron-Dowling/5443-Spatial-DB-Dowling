@@ -5,4 +5,4 @@
 #### Image:
 <img src="https://github.com/Byron-Dowling/Assets/blob/main/Images/20161009_112242%20(2).jpg?raw=true" width="200" height="200" />
 #### Avatar:
-![Bayern](https://github.com/Byron-Dowling/Assets/blob/main/Images/download.png?raw=true)
+<img src="https://github.com/Byron-Dowling/Assets/blob/main/Images/download.png?raw=true" width="200" height="200" />
