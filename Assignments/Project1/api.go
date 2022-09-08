@@ -192,7 +192,10 @@ func main() {
 			- Returns all matches by Country
 	*/
 
+	// Declaring an instance of Gin
 	app := gin.Default()
+
+	// Home page info
 	app.GET("/Home", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"Message": `Hello and thanks for stopping by, this API is brought to you by Squarespace.`,
@@ -200,6 +203,7 @@ func main() {
 		})
 	})
 
+	// Additional routes
 	app.GET("/Home/All", venv.FindAll)
 	app.GET("/Home/Closest/:lat/:long", venv.NearestNeighbor)
 	app.GET("/Home/FindSightingByCity/:id", venv.FindSightingByCity)
@@ -236,6 +240,7 @@ func main() {
 
 func (env vEnv)NearestNeighbor(c *gin.Context) {
 
+	// Values that will be read from PostgreSQL
 	var date string
 	var country string
 	var city string
@@ -243,36 +248,44 @@ func (env vEnv)NearestNeighbor(c *gin.Context) {
 	var shape string
 	var lat float32
 	var long float32
+
+	// Variables needed for GPS
 	var DM float64
 	var DKM float64
 
 
+	// Need to convert from float32 to float64 since float64 is required for Haversine
 	lattitude, e := strconv.ParseFloat(c.Param("lat"), 64)
 	checkError(e)
 
+	// Need to convert from float32 to float64 since float64 is required for Haversine
 	longitude, er := strconv.ParseFloat(c.Param("long"), 64)
 	checkError(er)
 
+	// Coordinate Pair that is passed in
 	cp1 := haversine.Coord{Lat: lattitude, Lon: longitude}
 
 	result, err := env.DB.Query(`SELECT * FROM public.ufo_sightings`)
 	checkError(err)
 
+	// Arbitratily large value that will reduce as we find the nearest sighting
 	var closestDistance float64 = 10000.123456
 	var closestSighting UFO_Distance
 
+	// Looping through matches
 	for result.Next() {
 		result.Scan(&date, &country, &city, &state, &shape, &lat, &long)
 
+		// Casting to float64
 		L1 := float64(lat)
 		L2 := float64(long)
 		
+		// Haversine coord pair of the current entry
 		cp2 := haversine.Coord{Lat: L1, Lon: L2}
 
 		mi, km := haversine.Distance(cp1, cp2)
 		DM = mi
 		DKM = km
-		// fmt.Println(mi, km)
 
 		if mi < closestDistance {
 
@@ -326,8 +339,10 @@ func (env vEnv)NearestNeighbor(c *gin.Context) {
 
 func (env vEnv)FindSightingByCountry(c *gin.Context) {
 
+	// List of ufo structs
 	var ufos []UFO
 
+	// Values that will be read from PostgreSQL
 	var date string
 	var country string
 	var city string
@@ -371,8 +386,10 @@ func (env vEnv)FindSightingByCountry(c *gin.Context) {
 
 func (env vEnv)FindSightingByState(c *gin.Context) {
 
+	// List of ufo structs
 	var ufos []UFO
 
+	// Values that will be read from PostgreSQL
 	var date string
 	var country string
 	var city string
@@ -416,8 +433,10 @@ func (env vEnv)FindSightingByState(c *gin.Context) {
 
 func (env vEnv)FindSightingByCity(c *gin.Context) {
 
+	// List of ufo structs
 	var ufos []UFO
 
+	// Values that will be read from PostgreSQL
 	var date string
 	var country string
 	var city string
@@ -459,11 +478,13 @@ func (env vEnv)FindSightingByCity(c *gin.Context) {
 
 func (env vEnv)FindAll(c *gin.Context) {
 
-	var ufos []UFO
-
 	rows, err := env.DB.Query(`SELECT * FROM public.ufo_sightings`)
 	checkError(err)
 
+	// List of ufo structs
+	var ufos []UFO
+
+	// Values that will be read from PostgreSQL
 	var date string
 	var country string
 	var city string
