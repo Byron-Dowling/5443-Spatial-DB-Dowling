@@ -25,7 +25,12 @@
 			- findAll
 			- findOne
 			- findClosest
-		
+
+
+	Frameworks used:
+		- Go
+		- Gin
+		- PostgreSQL		
 */
 
 package main
@@ -65,6 +70,8 @@ const(
 
 	Used in lieu of a global variable for our Database so that when we reference our 
 	PostgreSQL DB in our API routes, our DB does not go out of scope.
+
+	Found this workaround in the references below:
 
 	https://pkg.go.dev/database/sql
 	https://dev.to/ramu_mangalarapu/building-rest-apis-in-golang-go-gin-with-persistence-database-postgres-4616
