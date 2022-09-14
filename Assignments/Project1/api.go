@@ -41,8 +41,8 @@ import(
 	"database/sql"
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"github.com/umahmood/haversine"
-	"strconv"
+	// "github.com/umahmood/haversine"
+	// "strconv"
 	_ "github.com/lib/pq"
 )
 
@@ -91,7 +91,7 @@ type vEnv struct {
 	╚██████╔╝██║     ╚██████╔╝
 	╚═════╝ ╚═╝      ╚═════╝ 
 							
-	Structs that holdsall the info of a UFO sighting that we will be querying from
+	Structs that holds all the info of a UFO sighting that we will be querying from
 	our database and return from our Gin API.
 
 	Ex:) 
@@ -129,6 +129,8 @@ type UFO struct {
 	Shape string
 	Lat float32
 	Long float32
+	Geo string
+	dist float64
 }
 
 type UFO_Distance struct {
@@ -223,7 +225,6 @@ func main() {
 	venv.DB.Close()	// Close our Database
 }
 
-
 /*
     Public API Function void: NearestNeighbor()
 
@@ -231,10 +232,7 @@ func main() {
         Function that determines the closest ufo sighting to the coordinates
 		that are passed into the URL.
 
-        This is performed by converting the string input into float64 values
-		and plugging them into the haversine distance formula. This is checked
-		against all results in the database and the one with the smallest distance
-		is returned as a JSON string on the API page.
+        This is performed by converting the PostGreSQL ST_Distance query
 
     Params:
         - c *gin.Context
@@ -247,6 +245,9 @@ func main() {
 
 func (env vEnv)NearestNeighbor(c *gin.Context) {
 
+	// List of ufo structs
+	var ufos []UFO
+
 	// Values that will be read from PostgreSQL
 	var date string
 	var country string
@@ -255,55 +256,8 @@ func (env vEnv)NearestNeighbor(c *gin.Context) {
 	var shape string
 	var lat float32
 	var long float32
-
-	// Variables needed for GPS
-	var DM float64
-	var DKM float64
-
-
-	// Need to convert from float32 to float64 since float64 is required for Haversine
-	lattitude, e := strconv.ParseFloat(c.Param("lat"), 64)
-	checkError(e)
-
-	// Need to convert from float32 to float64 since float64 is required for Haversine
-	longitude, er := strconv.ParseFloat(c.Param("long"), 64)
-	checkError(er)
-
-	// Coordinate Pair that is passed in
-	cp1 := haversine.Coord{Lat: lattitude, Lon: longitude}
-
-	result, err := env.DB.Query(`SELECT * FROM public.ufo_sightings`)
-	checkError(err)
-
-	// Arbitratily large value that will reduce as we find the nearest sighting
-	var closestDistance float64 = 10000.123456
-	var closestSighting UFO_Distance
-
-	// Looping through matches
-	for result.Next() {
-		result.Scan(&date, &country, &city, &state, &shape, &lat, &long)
-
-		// Casting to float64
-		L1 := float64(lat)
-		L2 := float64(long)
-		
-		// Haversine coord pair of the current entry
-		cp2 := haversine.Coord{Lat: L1, Lon: L2}
-
-		mi, km := haversine.Distance(cp1, cp2)
-		DM = mi
-		DKM = km
-
-		if mi < closestDistance {
-
-			closestDistance = mi
-			temp := UFO_Distance{DateTime: date, Country: country, City: city, State: state,
-				Shape: shape, Lat: lat, Long: long, distanceMiles: DM, distanceKM: DKM }
-			
-			closestSighting = temp
-		}
-
-	}
+	var geo string
+	var distance float64
 
 	/*
 		Coordinate Pairs to Test:
@@ -319,12 +273,23 @@ func (env vEnv)NearestNeighbor(c *gin.Context) {
 
 	*/
 
-	output := fmt.Sprintf("The closest ufo sighting is %f miles away", closestDistance)
-	
-	c.JSON(200, gin.H{
-		"Message": output,
-		"Value": closestSighting,
-	})
+
+	sqlStatemnt := fmt.Sprintf(`SELECT *, ST_Distance('SRID=4326;POINT(%s %s)'::geometry, location)
+	AS dist FROM public.ufo_sightings ORDER BY dist LIMIT 10`, c.Param("long"), c.Param("lat"))
+
+	fmt.Println(sqlStatemnt)
+
+	result, err := env.DB.Query(sqlStatemnt)
+	checkError(err)
+
+	for result.Next() {
+		result.Scan(&date, &country, &city, &state, &shape, &lat, &long, &geo, &distance)
+
+		ufos = append(ufos, UFO{DateTime: date, Country: country, City: city, State: state,
+			Shape: shape, Lat: lat, Long: long, Geo: geo, dist: distance})
+	}
+
+	c.JSON(http.StatusOK, ufos)
 }
 
 
@@ -357,6 +322,7 @@ func (env vEnv)FindSightingByCountry(c *gin.Context) {
 	var shape string
 	var lat float32
 	var long float32
+	var geo string
 
 	id := c.Param("id")
 
@@ -365,10 +331,10 @@ func (env vEnv)FindSightingByCountry(c *gin.Context) {
 	checkError(e)
 
 	for result.Next() {
-		result.Scan(&date, &country, &city, &state, &shape, &lat, &long)
+		result.Scan(&date, &country, &city, &state, &shape, &lat, &long, &geo)
 
 		ufos = append(ufos, UFO{DateTime: date, Country: country, City: city, State: state,
-			Shape: shape, Lat: lat, Long: long})
+			Shape: shape, Lat: lat, Long: long, Geo: geo})
 	}
 
 	c.JSON(http.StatusOK, ufos)
@@ -404,6 +370,7 @@ func (env vEnv)FindSightingByState(c *gin.Context) {
 	var shape string
 	var lat float32
 	var long float32
+	var geo string
 
 	id := c.Param("id")
 
@@ -412,10 +379,10 @@ func (env vEnv)FindSightingByState(c *gin.Context) {
 	checkError(e)
 
 	for result.Next() {
-		result.Scan(&date, &country, &city, &state, &shape, &lat, &long)
+		result.Scan(&date, &country, &city, &state, &shape, &lat, &long, &geo)
 
 		ufos = append(ufos, UFO{DateTime: date, Country: country, City: city, State: state,
-			Shape: shape, Lat: lat, Long: long})
+			Shape: shape, Lat: lat, Long: long, Geo: geo})
 	}
 
 	c.JSON(http.StatusOK, ufos)
@@ -451,6 +418,7 @@ func (env vEnv)FindSightingByCity(c *gin.Context) {
 	var shape string
 	var lat float32
 	var long float32
+	var geo string
 
 	id := c.Param("id")
 
@@ -459,10 +427,10 @@ func (env vEnv)FindSightingByCity(c *gin.Context) {
 	checkError(e)
 
 	for result.Next() {
-		result.Scan(&date, &country, &city, &state, &shape, &lat, &long)
+		result.Scan(&date, &country, &city, &state, &shape, &lat, &long, &geo)
 
 		ufos = append(ufos, UFO{DateTime: date, Country: country, City: city, State: state,
-			Shape: shape, Lat: lat, Long: long})
+			Shape: shape, Lat: lat, Long: long, Geo: geo})
 	}
 
 	c.JSON(http.StatusOK, ufos)
@@ -499,12 +467,13 @@ func (env vEnv)FindAll(c *gin.Context) {
 	var shape string
 	var lat float32
 	var long float32
+	var geo string
 
 	for rows.Next() {
-		rows.Scan(&date, &country, &city, &state, &shape, &lat, &long)
+		rows.Scan(&date, &country, &city, &state, &shape, &lat, &long, &geo)
 
 		ufos = append(ufos, UFO{DateTime: date, Country: country, City: city, State: state,
-			Shape: shape, Lat: lat, Long: long})
+			Shape: shape, Lat: lat, Long: long, Geo: geo})
 	}
 
 
