@@ -1,5 +1,5 @@
 # Missile Defense
-Collection of Operating System projects from Graduate and Undergraduate classes\
+Missile Defense Project and its associated files
 
 ## Projects
 
