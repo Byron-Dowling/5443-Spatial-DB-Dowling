@@ -3,7 +3,7 @@ Missile Defense Project and its associated files
 
 ## Projects
 
-|   #   | Category          | Description                                 |
+|   #   | File          | Description                                 |
 | :---: | --------------- | ------------------------------------------- |
 |   1   | Quit.py   | [Quit the Game](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/quit.py)          |
 |   2   | Reset.py | [Reset the Game Server](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/Reset.py)  |
