@@ -9,3 +9,6 @@ Missile Defense Project and its associated files
 |   2   | Reset.py | [Reset the Game Server](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/Reset.py)  |
 |   3   | RadarSweep.py | [Detect Incoming Missiles](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/RadarSweep.py) |
 |   4   | FireSolution.py    | [Fire a Missile Solution](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/FireSolution.py)   |
+
+### POST Response with Successful Missile Hit
+![MH](https://github.com/Byron-Dowling/Assets/blob/main/Images/Missile%20Hit%20Message.png?raw=true)
