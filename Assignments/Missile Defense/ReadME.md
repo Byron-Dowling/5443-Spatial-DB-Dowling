@@ -9,6 +9,7 @@ Missile Defense Project and its associated files
 |   2   | Reset.py | [Reset the Game Server](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/Reset.py)  |
 |   3   | RadarSweep.py | [Detect Incoming Missiles](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/RadarSweep.py) |
 |   4   | FireSolution.py    | [Fire a Missile Solution](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/FireSolution.py)   |
+|   5   | config.json    | [Database Config File](https://github.com/Byron-Dowling/5443-Spatial-DB-Dowling/blob/main/Assignments/Missile%20Defense/config.json)   |
 
 ## Sample Region
 ![SR](https://github.com/Byron-Dowling/Assets/blob/main/Images/Defense%20REgion.png?raw=true)
