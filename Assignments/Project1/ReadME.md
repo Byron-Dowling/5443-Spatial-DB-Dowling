@@ -1,26 +1,17 @@
-    Name: 		Byron Dowling
-    Course:		5443 Spatial Databases
-    Semester:	Fall, 2022	
-    Assignment:	Program 1 - Simple API using Go Gin and PostgreSQL
+# Overview
 
-    References used:
+## Database
+Have local install of Postgres dB with PostGis installed and enabled.  
+Visualization tools (e.g. Pgadmin4) recommended to allow myself or others to help debug problems.  
+Create a DB called Project1 and use the public schema for this project.  
+Find a data file from https://cs.msutexas.edu/~griffin/data and load it into your DB. Obviously create an appropriate table with a geometry data type added to allow for some spatial query's to be run.  
 
-      - https://pkg.go.dev/database/sql (SQL)
-      - https://pkg.go.dev/net/http (HTTP Responses)
-      - https://pkg.go.dev/github.com/gin-gonic/gin#section-readme (Gin API)
-      - https://go.dev/doc/tutorial/web-service-gin (Web Service Gin)
-      - https://pkg.go.dev/strconv (String Convert)
-      - https://github.com/umahmood/haversine (Haversine Formula)
-      - https://dev.to/ramu_mangalarapu/building-rest-apis-in-golang-go-gin-with-persistence-database-postgres-4616
-
-
-    Assignment Instructions:
-
-      - Install Postgres DB and PostGIS
-      - Install pgAdmin4
-      - Created DB called Project1 using Public schema
-      - Load a data file from the MSU CS server
-      - Have the following API routes
-        - findAll
-        - findOne
-        - findClosest
+## Api
+Have a local api that has the following routes:
+    findAll
+    findOne
+    findClosest
+    
+**findAll:** Returns all the tuples from your table
+**findOne:** Returns a single tuple based on a column name (attribute) and value (e.g id=1299 , or name=texas).
+**findClosest:** Returns a single tuple which contains the closest geometry to the one passed in (e.g. lon=-123.63454&lat=34.74645)  
