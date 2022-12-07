@@ -1,7 +1,8 @@
 # Spatial Databases
 ## Assignments
-### Byron Dowling
-### Description:
+## Byron Dowling  
+  
+### Folder Description:
 Collection of Programs assigned in class
 
 ### Projects
