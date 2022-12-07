@@ -21,6 +21,27 @@ from geojson import MultiPolygon, Point, MultiPoint
 import copy
 
 
+"""
+ 
+ ██████╗  █████╗ ████████╗ █████╗ ██████╗  █████╗ ███████╗███████╗
+ ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝
+ ██║  ██║███████║   ██║   ███████║██████╔╝███████║███████╗█████╗  
+ ██║  ██║██╔══██║   ██║   ██╔══██║██╔══██╗██╔══██║╚════██║██╔══╝  
+ ██████╔╝██║  ██║   ██║   ██║  ██║██████╔╝██║  ██║███████║███████╗
+ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝
+                                                                  
+  ██████╗██╗   ██╗██████╗ ███████╗ ██████╗ ██████╗                
+ ██╔════╝██║   ██║██╔══██╗██╔════╝██╔═══██╗██╔══██╗               
+ ██║     ██║   ██║██████╔╝███████╗██║   ██║██████╔╝               
+ ██║     ██║   ██║██╔══██╗╚════██║██║   ██║██╔══██╗               
+ ╚██████╗╚██████╔╝██║  ██║███████║╚██████╔╝██║  ██║               
+  ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝               
+                                                                  
+ 
+    Creates an object that is used to connect to our postgres database
+    and allows us to create tables and run queries directly connected to
+    our Postgres database in pgAdmin.
+"""
 
 class DatabaseCursor(object):
     def __init__(self, conn_config_file):
@@ -77,18 +98,19 @@ def shouldHaveUsedUnixTimeStamps(timestamp):
 
 if __name__ == "__main__":
     
-    # Get all these information from the database and make a post send it to solution url
-    # team_id           => get rid from myregion table
-    # target_missile_id => Get the missile id from the table point_to_shoot
-    # missile_type      => Get the missile type from the table speed database
-    # fired_time        => Get the return time from the missile2 table.
-    # firedfrom_lat     => Get the battery latitude from the table battery_lon_lat
-    # firedfrom_lon     => Get the battery longitude from the table battery_lon_lat 
-    # aim_lat           => Get the target latitude from the table point_to_shoot 
-    # aim_lon           => Get the target latitude longitude from the table point_to_shoot
-    # expected_hit_time => Get the return time from the return_time_hh_mm_ss table.
-    # target_alt        => Get the target altitude from the table point_to_shoot_altitude
-    
+    """
+        - Get all these information from the database and make a post send it to solution url
+        - team_id           => get rid from myregion table
+        - target_missile_id => Get the missile id from the table point_to_shoot
+        - missile_type      => Get the missile type from the table speed database
+        - fired_time        => Get the return time from the missile2 table.
+        - firedfrom_lat     => Get the battery latitude from the table battery_lon_lat
+        - firedfrom_lon     => Get the battery longitude from the table battery_lon_lat 
+        - aim_lat           => Get the target latitude from the table point_to_shoot 
+        - aim_lon           => Get the target latitude longitude from the table point_to_shoot
+        - expected_hit_time => Get the return time from the return_time_hh_mm_ss table.
+        - target_alt        => Get the target altitude from the table point_to_shoot_altitude
+    """
     
     # Get the team id myregion table
     with DatabaseCursor(".config.json") as cur:
