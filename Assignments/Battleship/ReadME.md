@@ -19,7 +19,7 @@ Create a database schema with tables that have support for some or up to all of 
 - Was one of your ships hit by a projectile?
 - What damage did that projectile inflict?
 
-Possible Advanced Queries
+**Possible Advanced Queries:**
  - To keep track of the enemy
  - Find patterns
     
