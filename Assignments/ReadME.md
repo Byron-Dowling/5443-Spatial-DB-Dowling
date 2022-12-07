@@ -1,11 +1,7 @@
-# Spatial Databases
-## Assignments
-## Byron Dowling  
-  
-### Folder Description:
+## Folder Description:
 Collection of Programs assigned in class
 
-### Projects
+## Projects
 
 |       #        | Description                | Language | Progress    |
 | :------------: | -------------------------- | -------- | ----------- |
