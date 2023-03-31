@@ -1,7 +1,7 @@
 # Missile Defense
 Missile Defense Project and its associated files
 
-## Projects
+## Files
 
 |   #   | File          | Description                                 |
 | :---: | --------------- | ------------------------------------------- |
